@@ -1,5 +1,6 @@
 package com.moli.scene.learn.service;
 
+import com.moli.scene.learn.BaseNoTxTest;
 import com.moli.scene.learn.BaseTest;
 import com.moli.scene.learn.common.dao.entity.TUsr;
 import com.moli.scene.learn.common.dao.mapper.TUsrMapper;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class DelayDoubleDelCacheTest extends BaseTest {
+public class DelayDoubleDelCacheTest extends BaseNoTxTest {
 
     @Resource
     private UserService userService;

@@ -23,6 +23,7 @@
         <mybatis.plus.starter.version>3.5.9</mybatis.plus.starter.version>
         <mybatis.plus.generator.version>3.5.17</mybatis.plus.generator.version>
         <velocity-engine-core.version>2.4</velocity-engine-core.version>
+        <redisson.version>3.40.2</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +71,16 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Caffeine 本地缓存 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -79,6 +90,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+            <exclusions>
+                <!-- 排除这个 否则请求会报401-->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-actuator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--JDBC-->
