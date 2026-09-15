@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: scene-learn
+  #mysql相关配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://1:4000/1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&rewriteBatchedStatements=true
+    username: 1
+    password: 1
+    hikari:
+      minimum-idle: 10
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 20
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#    property-naming-strategy: SNAKE_CASE  #body 驼峰下划线互转
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false #解决mybatis 级联查询懒加载对象无法序列化问题
+    generator:
+      WRITE_BIGDECIMAL_AS_PLAIN: true #不使用科学计数法
+  # Redis 配置
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 123456
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+  # RabbitMQ 配置
+  rabbitmq:
+    host: 127.0.0.1
+    port: 15672
+    username: admin
+    password: 123
+    virtual-host: /
+
+
+#mybatis plus
+mybatis-plus:
+  type-aliases-package: com.moli.scene.learn.common.dao.entity
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true
+    # 配置的缓存的全局开关
+    cache-enabled: true
+    # 延时加载的开关
+    lazy-loading-enabled: true
+    # 开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
+    multiple-result-sets-enabled: true
+    use-generated-keys: false
+    default-statement-timeout: 60
+    default-fetch-size: 100
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+    com:
+      moli: debug

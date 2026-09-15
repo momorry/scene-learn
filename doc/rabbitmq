@@ -1,0 +1,35 @@
+docker stop rabbitmq
+docker rm rabbitmq
+
+-- docker.io/library/rabbitmq:management-alpine
+docker pull docker.io/library/rabbitmq:management-alpine
+mkdir -p /opt/data/rabbitmq
+docker run -id --name=rabbitmq -v /opt/data/rabbitmq:/var/lib/rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin rabbitmq:management
+
+
+在浏览器中访问 http://<你的服务器地址>:15672，使用之前设置的用户名和密码（admin 和 admin）登录，即可访问 RabbitMQ 的管理界面。
+
+
+Windows下安装
+博客：https://www.cnblogs.com/TheMagicalRainbowSea/p/19023068
+
+访问 Erlang 下载页面：https://www.erlang.org/downloads
+otp_win64_27.3.4.10.exe
+
+https://www.rabbitmq.com/docs/download
+rabbitmq-server-4.3.0.exe
+
+CMD进入MQ的安装目录：rabbitmq-plugins.bat enable rabbitmq_management
+
+CMD：创建一个新用户
+rabbitmqctl add_user admin 123 # 创建一个名为 admin 的用户，密码为 123
+rabbitmqctl set_user_tags admin administrator  #设置角色
+rabbitmq-plugins.bat enable rabbitmq_management #设置权限
+
+访问：http://127.0.0.1:15672/#/users
+默认账号：guest/guest
+
+QA: 如果执行rabbitmqctl add_user admin 123报错，就要去下面这个目录复制
+C:\Windows\System32\config\systemprofile\.erlang.cookie 这个文件到 C:\Users\farben\.erlang.cookie 当前用户目录下，然后重启MQ服务
+
+
