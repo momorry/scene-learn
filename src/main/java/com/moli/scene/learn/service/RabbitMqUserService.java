@@ -8,33 +8,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.*;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService {
-    public static final String UINFO_CACHE_KEY = "userinfo:id:%s";
+public class RabbitMqUserService {
+
+    public static final String UINFO_CACHE_KEY = "mq:userinfo:id:%s";
     private final TUsrManager tUsrManager;
     private final RedisUtil redisUtil;
-    /**
-     * 测试使用，实际上需要自己管理一个
-     */
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+    private final CacheDeleteProducer cacheDeleteProducer;
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateUserDelayDoubleDelete(Long userId, String userName) {
+    public void updateUserMq(Long userId, String userName) {
         String uKey = String.format(UINFO_CACHE_KEY, userId);
-        redisUtil.delete(uKey);
-        log.info("第一次删除缓存：{}", uKey);
+        cacheDeleteProducer.sendDeleteMessage(uKey);
         TUsr t = new TUsr();
         t.setId(userId);
         t.setUserName(userName);
         tUsrManager.updateById(t);
-        executor.schedule(()->{
-            redisUtil.delete(uKey);
-            log.info("延迟1秒删除:{}", uKey);
-        }, 1, TimeUnit.SECONDS);
+        cacheDeleteProducer.sendDeleteMessage(uKey);
     }
 
     public TUsr queryUserById(Long userId) {
@@ -48,6 +41,4 @@ public class UserService {
         log.info("数据库：{}", byId);
         return byId;
     }
-
-
 }
