@@ -24,3 +24,25 @@ create table t_product
     update_time     datetime    null comment '更新时间',
     update_by       varchar(32) null comment '更新人'
 ) comment '商品表';
+
+
+-- 订单主表
+CREATE TABLE order_info (
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                            order_no VARCHAR(64) NOT NULL UNIQUE, -- 业务唯一键
+                            user_id BIGINT NOT NULL,
+                            total_amount DECIMAL(10, 2),
+                            status TINYINT NOT NULL DEFAULT 0, -- 0: TRYING, 1: SUCCESS, 2: CANCELED
+                            create_time DATETIME
+);
+
+-- 订单明细表
+CREATE TABLE order_item (
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                            order_no VARCHAR(64) NOT NULL, -- 关联主表
+                            sku_id BIGINT NOT NULL,
+                            quantity INT,
+                            price DECIMAL(10, 2),
+                            status TINYINT NOT NULL DEFAULT 0, -- 0: TRYING, 1: SUCCESS, 2: CANCELED
+                            INDEX idx_order_no (order_no)
+);
