@@ -1,10 +1,15 @@
 package com.moli.scene.learn.common.base;
 
 public enum ErrorCodeEnum {
-    SUCCESS, FAIL, FAIL_DATA;
+    SUCCESS(200, "ok"), FAIL(500, "fail"), FAIL_DATA(501, "failData");
 
     private Integer errorCode;
     private String errorDesc;
+
+    ErrorCodeEnum(Integer errorCode, String errorDesc) {
+        this.errorCode = errorCode;
+        this.errorDesc = errorDesc;
+    }
 
     public static void ifExistsCode(Integer code) {
 

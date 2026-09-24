@@ -3,6 +3,7 @@ package com.moli.scene.learn.common.redis;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -412,5 +413,21 @@ public class RedisUtil {
     public long sRemove(String key, Object... values) {
         Long result = redisTemplate.opsForSet().remove(key, values);
         return result != null ? result : 0;
+    }
+
+    // ============================= Script 操作 =============================
+
+    /**
+     * 执行 Lua 脚本
+     *
+     * @param script 脚本内容
+     * @param keys   KEYS 列表
+     * @param args   ARGV 列表
+     * @return 脚本返回值
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T executeScript(String script, Class<T> resultType, List<String> keys, Object... args) {
+        DefaultRedisScript<T> redisScript = new DefaultRedisScript<>(script, resultType);
+        return (T) stringRedisTemplate.execute(redisScript, keys, args);
     }
 }
